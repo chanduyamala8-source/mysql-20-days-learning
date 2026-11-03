@@ -15,6 +15,7 @@ dept varchar(20)
 );
 
 desc employees;
+desc company_staff;
 
 alter table employees modify fname varchar(30);
 
@@ -54,7 +55,7 @@ joining_date date);
 
 desc company_staff;
 
-alter table company_staff add email varchar(100);
+	
 
 alter table company_staff add phone_number bigint;
 
@@ -70,9 +71,9 @@ alter table company_staff modify emp_name varchar(100);
 
 alter table company_staff modify salary decimal(12,2);
 
-alter table company_staff rename column emp_name to employee_name;
+alter table company_staff rename to column emp_name to employee_name;
 
-alter table company_staff rename column joining_date to date_of_joining;
+alter table company_staff change column joining_date date_of_joining date;
 
 alter table company_staff drop column bonus;
 
@@ -87,7 +88,7 @@ alter table staff_records rename to company_staff;
 desc company_staff;
 
 alter table company_staff add last_updated date after skills;
-
+show tables;
 
 
 
