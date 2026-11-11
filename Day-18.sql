@@ -1,0 +1,60 @@
+use companydb;
+DROP TABLE EMPLOYEES;
+CREATE TABLE Employees (
+	emp_id INT PRIMARY KEY,
+	emp_name VARCHAR(50),
+	department VARCHAR(30),
+	salary DECIMAL(10,2),
+	experience INT,
+	city VARCHAR(30)
+);
+ 
+INSERT INTO Employees VALUES
+(101,'Rahul','IT',65000,5,'Hyderabad'),
+(102,'Priya','HR',45000,3,'Chennai'),
+(103,'Amit','Finance',70000,6,'Bangalore'),
+(104,'Sneha','IT',80000,8,'Hyderabad'),
+(105,'Kiran','Sales',40000,2,'Pune');
+
+
+CREATE TABLE Employee_Audit(
+	audit_id INT AUTO_INCREMENT PRIMARY KEY,
+	emp_id INT,
+	action_type VARCHAR(20),
+	old_salary DECIMAL(10,2),
+	new_salary DECIMAL(10,2),
+	action_time DATETIME
+);
+
+select*from employees;
+select*from employee_audit;
+
+-- BEFORE INSERT 
+DELIMITER //
+CREATE TRIGGER TRG_BEFORE_INSERT_SALARY
+BEFORE INSERT
+ON EMPLOYEES
+FOR EACH ROW
+BEGIN
+     IF NEW.SALARY<20000 THEN
+     SIGNAL SQLSTATE '45000'
+     SET MESSAGE_TEXT='SALARY CANNOT BE LESS THAN 20000';
+     END IF;
+     END //
+     DELIMITER ;
+     INSERT INTO EMPLOYEES VALUES(106,'MAHESH','SALES',25000,1,'HYD');
+     
+     -- INSERT
+     DELIMITER //
+     CREATE TRIGGER TRG_AFTER_INSERT
+     AFTER INSERT
+     ON EMPLOYEES
+     FOR EACH ROW
+     BEGIN
+         INSERT INTO EMPLOYEE_AUDIT(EMP_ID,ACTION_TYPE,NEW_SALARY,ACTION_TIME)
+         VALUE(NEW.EMP_ID,'INSERT',NEW.SALARY,NOW());
+         END //
+         DELIMITER ;
+         INSERT INTO EMPLOYEES VALUES(107,'KAVYA','HR',55000,'HR',4,'CHENNAI');
+         SELECT*FROM EMPLOYEES_AUDIT;
+         
